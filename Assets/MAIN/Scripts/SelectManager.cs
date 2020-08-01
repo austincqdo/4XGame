@@ -11,8 +11,7 @@ public class SelectManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject playerInfoObject = GameObject.Find("PlayerInfo");
-        playerInfo = playerInfoObject.GetComponent < PlayerInfo > ();
+        playerInfo = GameObject.Find("PlayerInfo").GetComponent < PlayerInfo > ();
     }
 
     // Update is called once per frame
@@ -20,14 +19,10 @@ public class SelectManager : MonoBehaviour
     {
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
-            // Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            // RaycastHit hit;
-            // if (Physics.Raycast(ray, out hit))
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()), Vector2.zero);
             if (hit.collider)
             {
                 GameObject unitHit = hit.collider.gameObject;
-                //print(Object.ReferenceEquals(unitHit, playerInfo.GetUnits()[0]));
                 if (!playerInfo.selectedUnits[unitHit.GetComponent<BasicUnit>().id])
                 {
                     SelectUnit(unitHit);

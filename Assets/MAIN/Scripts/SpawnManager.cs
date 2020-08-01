@@ -22,8 +22,8 @@ public class SpawnManager : MonoBehaviour
 
     void Awake()
     {
-        GameObject playerInfoObject = GameObject.Find("PlayerInfo");
-        playerInfo = playerInfoObject.GetComponent<PlayerInfo>();
+        playerInfo = GameObject.Find("PlayerInfo").GetComponent<PlayerInfo>();
+
         spawnPosition = new Vector3(0f, 0f, 0f);
 
         unitStringToGameObject = new Dictionary<string, GameObject>();
@@ -54,8 +54,12 @@ public class SpawnManager : MonoBehaviour
         spawnPosition.y++;
     }
 
-    public void DespawnUnit(int unitId)
+    public void DespawnUnit(GameObject unit)
     {
+        Destroy(unit);
 
+        int idx = playerInfo.selectedUnits.IndexOf(true);
+        playerInfo.selectedUnits.RemoveAt(idx);
+        playerInfo.selectedUnits.Remove(unit);
     }
 }

@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889d6720d884e614fb62e87ddd851b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fogOfWar: {fileID: 0}
+  fogOfWar: {fileID: 313570460666324398, guid: 06d78593cedcc485a83e4e16f902868c, type: 3}
   vision: 2
 --- !u!114 &6412850855995804658
 MonoBehaviour:
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &6412850855995804659

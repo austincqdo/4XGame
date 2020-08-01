@@ -14,9 +14,6 @@ Handles logic related to unit movement
 public class UnitMovement : MonoBehaviour
 {
 
-
-
-
     private Vector2 movementInput;
     private Vector3 direction;
 
@@ -25,6 +22,12 @@ public class UnitMovement : MonoBehaviour
     bool hasMoved;
 
     public int vision = 1;
+
+
+    void Awake()
+    {
+        fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
+    }
 
     // Start is called before the first frame update
     void Start()
