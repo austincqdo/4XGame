@@ -27,6 +27,9 @@ public class UnitMovement : MonoBehaviour
     void Awake()
     {
         fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
+
+        // Track this unit with the camera
+        GameObject.Find("GameManager").GetComponent<GameManager>().playerTransform = transform;
     }
 
     // Start is called before the first frame update
