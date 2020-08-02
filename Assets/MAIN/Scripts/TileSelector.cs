@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class TileSelector : MonoBehaviour
 {
-    public Tilemap map;
+    private Tilemap map;
     private Vector3Int prevTileCoord;
     private Color prevTileColor;
     // Start is called before the first frame update

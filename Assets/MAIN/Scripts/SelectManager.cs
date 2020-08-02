@@ -23,17 +23,17 @@ public class SelectManager : MonoBehaviour
             if (hit.collider)
             {
                 GameObject unitHit = hit.collider.gameObject;
-                if (!playerInfo.selectedUnits[unitHit.GetComponent<BasicUnit>().id])
+                if (!playerInfo.GetSelectedUnits()[unitHit.GetComponent<BasicUnit>().id])
                 {
                     SelectUnit(unitHit);
                 }
             }
             else //no hit, so deselect all
             {
-                if (playerInfo.selectedUnits.Any(s => s))
+                if (playerInfo.GetSelectedUnits().Any(s => s))
                 {
-                    int idx = playerInfo.selectedUnits.IndexOf(true);
-                    DeselectUnit(playerInfo.units[idx]);
+                    int idx = playerInfo.GetSelectedUnits().IndexOf(true);
+                    DeselectUnit(playerInfo.GetUnits()[idx]);
                 }
             }
         }
@@ -44,7 +44,7 @@ public class SelectManager : MonoBehaviour
         Color tmp = o.GetComponent<SpriteRenderer>().color;
         tmp.a = .75f;
         o.GetComponent<SpriteRenderer>().color = tmp;
-        playerInfo.selectedUnits[o.GetComponent<BasicUnit>().id] = true;
+        playerInfo.ChangeSelectedUnitStatus(o.GetComponent<BasicUnit>().id, true);
     }
 
     public void DeselectUnit(GameObject o)
@@ -52,7 +52,6 @@ public class SelectManager : MonoBehaviour
         Color tmp = o.GetComponent<SpriteRenderer>().color;
         tmp.a = 1f;
         o.GetComponent<SpriteRenderer>().color = tmp;
-        playerInfo.selectedUnits[o.GetComponent<BasicUnit>().id] = false;
-
+        playerInfo.ChangeSelectedUnitStatus(o.GetComponent<BasicUnit>().id, false);
     }
 }

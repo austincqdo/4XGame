@@ -13,6 +13,7 @@ Handles logic related to unit movement
 
 public class UnitMovement : MonoBehaviour
 {
+    private PlayerInfo playerInfo;
 
     private Vector2 movementInput;
     private Vector3 direction;
@@ -30,19 +31,23 @@ public class UnitMovement : MonoBehaviour
 
         // Track this unit with the camera
         GameObject.Find("GameManager").GetComponent<GameManager>().playerTransform = transform;
+
+        //int id = gameObject.GetComponent<BasicUnit>();
+
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-    
-        if(movementInput.x == 0)
+
+        if (movementInput.x == 0)
         {
             hasMoved = false;
         }
@@ -52,6 +57,8 @@ public class UnitMovement : MonoBehaviour
 
             GetMovementDirection();
         }
+
+        // click-to-move
 
     }
 
@@ -112,14 +119,26 @@ public class UnitMovement : MonoBehaviour
         Vector3Int currentPlayerTile = fogOfWar.WorldToCell(transform.position);
 
         //Clear the surrounding tiles
-        for(int x=-vision; x<= vision; x++)
+        for (int x = -vision; x <= vision; x++)
         {
-            for(int y=-vision; y<= vision; y++)
+            for (int y = -vision; y <= vision; y++)
             {
                 fogOfWar.SetTile(currentPlayerTile + new Vector3Int(x, y, 0), null);
             }
 
         }
 
+    }
+
+    // point-and-click movement. rename.
+    private void ClickToMove(Vector3Int dest)
+    {
+        AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
+        List<Vector3Int> path = aStar.FindPath(dest);
+
+        // do stuff
+        print(path);
+
+        Destroy(aStar);
     }
 }

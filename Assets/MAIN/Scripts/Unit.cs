@@ -5,7 +5,7 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public Player Owner { get; set; }
-    public int id;
+    public int id = 0;
 
     // Start is called before the first frame update
     void Start()

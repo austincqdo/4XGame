@@ -13,21 +13,12 @@ public class SpawnManager : MonoBehaviour
     private List<bool> selectedUnits;
     // end testing
 
-    [SerializeField]
-    [Tooltip("The Basic Unit prefab.")]
-    private GameObject basicUnit;
-
-    private Dictionary<string, GameObject> unitStringToGameObject;
-    
 
     void Awake()
     {
         playerInfo = GameObject.Find("PlayerInfo").GetComponent<PlayerInfo>();
 
         spawnPosition = new Vector3(0f, 0f, 0f);
-
-        unitStringToGameObject = new Dictionary<string, GameObject>();
-        unitStringToGameObject.Add("BasicUnit", basicUnit);
 
     }
 
@@ -48,18 +39,29 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnUnit(string unitType="BasicUnit")
     {
-        GameObject newUnit = Instantiate(unitStringToGameObject[unitType], spawnPosition, Quaternion.identity);
-        playerInfo.units.Add(newUnit);
-        playerInfo.selectedUnits.Add(false);
+        GameObject newUnit = Instantiate(playerInfo.UnitTypes[unitType], spawnPosition, Quaternion.identity);
+        switch (unitType)
+        {
+            case "BasicUnit":
+                BasicUnit basicUnit = newUnit.GetComponent<BasicUnit>();
+                basicUnit.Owner = playerInfo.GetPlayer();
+                basicUnit.id = playerInfo.numUnits;
+                break;
+        }
+
+        playerInfo.numUnits++;
+
+        playerInfo.AddUnit(newUnit);
+        playerInfo.AddSelectedUnit(false);
         spawnPosition.y++;
     }
 
     public void DespawnUnit(GameObject unit)
     {
+        int idx = playerInfo.GetSelectedUnits().IndexOf(true);
+        playerInfo.GetSelectedUnits().RemoveAt(idx);
+        playerInfo.GetUnits().Remove(unit);
         Destroy(unit);
-
-        int idx = playerInfo.selectedUnits.IndexOf(true);
-        playerInfo.selectedUnits.RemoveAt(idx);
-        playerInfo.selectedUnits.Remove(unit);
+        playerInfo.numUnits--;
     }
 }
