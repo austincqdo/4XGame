@@ -16,9 +16,6 @@ public class PlayerInfo : MonoBehaviour
     [Tooltip("List of units owned by player.")]
     private List<GameObject> units = new List<GameObject>();
 
-    [SerializeField]
-    [Tooltip("Boolean list of units' selected statuses.")]
-    private List<bool> selectedUnits = new List<bool>();
 
     public Dictionary<string, GameObject> UnitTypes { get; set; }
 
@@ -51,23 +48,8 @@ public class PlayerInfo : MonoBehaviour
         return this.units;
     }
 
-    public List<bool> GetSelectedUnits()
-    {
-        return this.selectedUnits;
-    }
-
     public void AddUnit(GameObject unit)
     {
         this.units.Add(unit);
-    }
-
-    public void AddSelectedUnit(bool selectedUnit)
-    {
-        this.selectedUnits.Add(selectedUnit);
-    }
-
-    public void ChangeSelectedUnitStatus(int idx, bool selected)
-    {
-        this.selectedUnits[idx] = selected;
     }
 }

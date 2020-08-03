@@ -13,7 +13,10 @@ Handles logic related to unit movement
 
 public class UnitMovement : MonoBehaviour
 {
+    private Unit unit;
+    private Player owner;
     private PlayerInfo playerInfo;
+    private int id;
 
     private Vector2 movementInput;
     private Vector3 direction;
@@ -31,16 +34,15 @@ public class UnitMovement : MonoBehaviour
 
         // Track this unit with the camera
         GameObject.Find("GameManager").GetComponent<GameManager>().playerTransform = transform;
-
-        //int id = gameObject.GetComponent<BasicUnit>();
-
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        unit = gameObject.GetComponent<Unit>();
+        owner = unit.owner;
+        playerInfo = owner.playerInfo;
+        id = unit.id;
     }
 
     // Update is called once per frame
@@ -59,7 +61,7 @@ public class UnitMovement : MonoBehaviour
         }
 
         // click-to-move
-
+        
     }
 
 

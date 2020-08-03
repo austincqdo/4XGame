@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public Player Owner { get; set; }
-    public int id = 0;
+    public Player owner;
+    public int id;
+    public bool selected;
+    public string type;
+
+    void Awake()
+    {
+        selected = false;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame

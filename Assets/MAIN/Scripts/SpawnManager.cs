@@ -8,18 +8,14 @@ public class SpawnManager : MonoBehaviour
     private PlayerInfo playerInfo;
     private Vector3 spawnPosition;
 
-    // testing getcomponent instead of accessors
     private List<GameObject> units;
-    private List<bool> selectedUnits;
-    // end testing
+    //private List<bool> selectedUnits;
 
 
     void Awake()
     {
         playerInfo = GameObject.Find("PlayerInfo").GetComponent<PlayerInfo>();
-
         spawnPosition = new Vector3(0f, 0f, 0f);
-
     }
 
     // Start is called before the first frame update
@@ -44,22 +40,18 @@ public class SpawnManager : MonoBehaviour
         {
             case "BasicUnit":
                 BasicUnit basicUnit = newUnit.GetComponent<BasicUnit>();
-                basicUnit.Owner = playerInfo.GetPlayer();
-                basicUnit.id = playerInfo.numUnits;
+                basicUnit.owner = playerInfo.GetPlayer();
+                basicUnit.id = playerInfo.numUnits + 1;
                 break;
         }
-
         playerInfo.numUnits++;
 
         playerInfo.AddUnit(newUnit);
-        playerInfo.AddSelectedUnit(false);
         spawnPosition.y++;
     }
 
     public void DespawnUnit(GameObject unit)
     {
-        int idx = playerInfo.GetSelectedUnits().IndexOf(true);
-        playerInfo.GetSelectedUnits().RemoveAt(idx);
         playerInfo.GetUnits().Remove(unit);
         Destroy(unit);
         playerInfo.numUnits--;
