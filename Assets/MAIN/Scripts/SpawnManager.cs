@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class SpawnManager : MonoBehaviour
 {
-    private PlayerInfo playerInfo;
+    private Player player;
     private Vector3 spawnPosition;
 
     private List<GameObject> units;
@@ -14,7 +14,7 @@ public class SpawnManager : MonoBehaviour
 
     void Awake()
     {
-        playerInfo = GameObject.Find("PlayerInfo").GetComponent<PlayerInfo>();
+        player = GameObject.Find("Player").GetComponent<Player>();
         spawnPosition = new Vector3(0f, 0f, 0f);
     }
 
@@ -35,25 +35,24 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnUnit(string unitType="BasicUnit")
     {
-        GameObject newUnit = Instantiate(playerInfo.UnitTypes[unitType], spawnPosition, Quaternion.identity);
+        GameObject unit = (GameObject) Resources.Load("UnitTypes/" + unitType);
+        GameObject newUnit = Instantiate(unit, spawnPosition, Quaternion.identity);
         switch (unitType)
         {
             case "BasicUnit":
                 BasicUnit basicUnit = newUnit.GetComponent<BasicUnit>();
-                basicUnit.owner = playerInfo.GetPlayer();
-                basicUnit.id = playerInfo.numUnits + 1;
+                basicUnit.owner = player;
+                basicUnit.id = player.GetUnits().Count;
                 break;
         }
-        playerInfo.numUnits++;
 
-        playerInfo.AddUnit(newUnit);
+        player.AddUnit(newUnit);
         spawnPosition.y++;
     }
 
     public void DespawnUnit(GameObject unit)
     {
-        playerInfo.GetUnits().Remove(unit);
+        player.GetUnits().Remove(unit);
         Destroy(unit);
-        playerInfo.numUnits--;
     }
 }

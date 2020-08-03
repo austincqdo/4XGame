@@ -6,12 +6,12 @@ using UnityEngine.InputSystem;
 
 public class SelectManager : MonoBehaviour
 {
-    private PlayerInfo playerInfo;
+    private Player player;
     
     // Start is called before the first frame update
     void Start()
     {
-        playerInfo = GameObject.Find("PlayerInfo").GetComponent < PlayerInfo > ();
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class SelectManager : MonoBehaviour
             }
             else //no hit, so deselect all
             {
-                GameObject selectedUnit = playerInfo.GetUnits().Find(s => s.GetComponent<Unit>().selected);
+                GameObject selectedUnit = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
                 if (selectedUnit)
                 {
                     DeselectUnit(selectedUnit);

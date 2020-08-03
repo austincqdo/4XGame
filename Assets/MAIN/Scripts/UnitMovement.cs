@@ -15,7 +15,7 @@ public class UnitMovement : MonoBehaviour
 {
     private Unit unit;
     private Player owner;
-    private PlayerInfo playerInfo;
+
     private int id;
 
     private Vector2 movementInput;
@@ -41,7 +41,6 @@ public class UnitMovement : MonoBehaviour
     {
         unit = gameObject.GetComponent<Unit>();
         owner = unit.owner;
-        playerInfo = owner.playerInfo;
         id = unit.id;
     }
 

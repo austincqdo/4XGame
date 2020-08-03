@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public PlayerInfo playerInfo;
     public SpawnManager spawnManager;
     public SelectManager selectManager;
+
+    [SerializeField]
+    [Tooltip("List of units owned by player.")]
+    private List<GameObject> units = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,5 +21,16 @@ public class Player : MonoBehaviour
     void Update()
     {
         
+    }
+
+
+    public List<GameObject> GetUnits()
+    {
+        return this.units;
+    }
+
+    public void AddUnit(GameObject unit)
+    {
+        this.units.Add(unit);
     }
 }
