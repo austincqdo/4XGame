@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
-
+//using UnityEngine.EventSystems;
 
 
 /**
@@ -21,6 +21,7 @@ public class UnitMovement : MonoBehaviour
     private Vector2 movementInput;
     private Vector3 direction;
 
+    public TileSelector selector;
     public Tilemap fogOfWar;
 
     bool hasMoved;
@@ -30,6 +31,7 @@ public class UnitMovement : MonoBehaviour
 
     void Awake()
     {
+        selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
         fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
 
         // Track this unit with the camera
@@ -59,8 +61,6 @@ public class UnitMovement : MonoBehaviour
             GetMovementDirection();
         }
 
-        // click-to-move
-        
     }
 
 
@@ -131,15 +131,16 @@ public class UnitMovement : MonoBehaviour
 
     }
 
-    // point-and-click movement. rename.
-    private void ClickToMove(Vector3Int dest)
+    void OnMouseDown()
     {
+        // Point-to-click movement.
+        print("does this work?");
         AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
-        List<Vector3Int> path = aStar.FindPath(dest);
+        List<Vector3Int> path = aStar.FindPath(selector.GetSelectedTile());
 
         // do stuff
-        print(path);
 
         Destroy(aStar);
+        print(path);
     }
 }

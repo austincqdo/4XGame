@@ -7,8 +7,10 @@ using UnityEngine.InputSystem;
 public class TileSelector : MonoBehaviour
 {
     private Tilemap map;
+    private Vector3Int tileCoord;
     private Vector3Int prevTileCoord;
     private Color prevTileColor;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +22,7 @@ public class TileSelector : MonoBehaviour
     void Update()
     { 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector3Int tileCoord = map.WorldToCell(mousePos);
+        tileCoord = map.WorldToCell(mousePos);
         if (tileCoord != prevTileCoord)
         {
             prevTileColor = map.GetColor(tileCoord);
@@ -32,5 +34,10 @@ public class TileSelector : MonoBehaviour
             }
             prevTileCoord = tileCoord;
         }
+    }
+
+    public Vector3Int GetSelectedTile()
+    {
+        return tileCoord;
     }
 }
