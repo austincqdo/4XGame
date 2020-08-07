@@ -24,7 +24,7 @@ public class PriorityQueue<T>
         {
             // Sort item by priority
             int i = 0;
-            while (elemList[i].Item2 < elemList[i + 1].Item2)
+            while (elemList[i].Item2 > elemList[i + 1].Item2)
             {
                 (T, float) tempElement = elemList[i + 1];
                 elemList[i + 1] = entry;

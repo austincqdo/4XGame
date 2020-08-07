@@ -23,6 +23,7 @@ public class TileSelector : MonoBehaviour
     { 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         tileCoord = map.WorldToCell(mousePos);
+        print(tileCoord);
         if (tileCoord != prevTileCoord)
         {
             prevTileColor = map.GetColor(tileCoord);

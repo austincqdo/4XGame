@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889d6720d884e614fb62e87ddd851b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selector: {fileID: 0}
   fogOfWar: {fileID: 313570460666324398, guid: 06d78593cedcc485a83e4e16f902868c, type: 3}
   vision: 2
 --- !u!114 &6412850855995804658
@@ -113,7 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: bb5cd465530fd06448985b985971d09f,
     type: 3}
-  m_NotificationBehavior: 1
+  m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -142,7 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3981ba8b96e845158ae6b1016220c24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
   id: 0
+  selected: 0
+  type: 
 --- !u!61 &3908599103779581676
 BoxCollider2D:
   m_ObjectHideFlags: 0

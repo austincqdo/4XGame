@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class BasicUnit : Unit
 {
 
-    void Awake()
+    override void Awake()
     {
         this.type = "BasicUnit";
     }

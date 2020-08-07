@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
 
 public class SpawnManager : MonoBehaviour
@@ -9,13 +10,16 @@ public class SpawnManager : MonoBehaviour
     private Vector3 spawnPosition;
 
     private List<GameObject> units;
-    //private List<bool> selectedUnits;
-
+    private Tilemap map;
 
     void Awake()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
-        spawnPosition = new Vector3(0f, 0f, 0f);
+        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
+
+        spawnPosition = map.GetCellCenterWorld(new Vector3Int(-3, 3, 0));
+
+        
     }
 
     // Start is called before the first frame update
@@ -47,7 +51,7 @@ public class SpawnManager : MonoBehaviour
         }
 
         player.AddUnit(newUnit);
-        spawnPosition.y++;
+        spawnPosition = map.GetCellCenterWorld(map.WorldToCell(spawnPosition) + new Vector3Int(0, 1, 0));
     }
 
     public void DespawnUnit(GameObject unit)

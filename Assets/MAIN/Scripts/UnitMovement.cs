@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
@@ -18,19 +20,24 @@ public class UnitMovement : MonoBehaviour
 
     private int id;
 
-    private Vector2 movementInput;
+    private Vector3 movementInput;
     private Vector3 direction;
 
+    private Tilemap map;
     public TileSelector selector;
     public Tilemap fogOfWar;
 
     bool hasMoved;
+    bool moving;
 
     public int vision = 1;
 
 
     void Awake()
     {
+        moving = false;
+
+        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
         selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
         fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
 
@@ -50,62 +57,42 @@ public class UnitMovement : MonoBehaviour
     void Update()
     {
 
-        if (movementInput.x == 0)
-        {
-            hasMoved = false;
-        }
-        else if (movementInput.x != 0 && !hasMoved)
-        {
-            hasMoved = true;
+        //if (movementInput.x == 0)
+        //{
+        //    hasMoved = false;
+        //}
+        //else if (movementInput.x != 0 && !hasMoved)
+        //{
+        //    hasMoved = true;
 
-            GetMovementDirection();
-        }
+        //    GetMovementDirection();
+        //}
 
     }
 
-
     public void GetMovementDirection()
     {
-        if (movementInput.x < 0)
+        if (movementInput.y == 0f)
         {
-            if (movementInput.y > 0)
-            {
-                direction = new Vector3(-0.5f, 0.5f);
-            }
-            else if (movementInput.y < 0)
-            {
-                direction = new Vector3(-0.5f, -0.5f);
-            }
-            else
-            {
-                direction = new Vector3(-1, 0, 0);
-            }
-            transform.position += direction;
-            UpdateFogOfWar();
+            direction = movementInput;
+        } else if (movementInput.x == 0f)
+        {
+            direction = new Vector3();
+        } else
+        {
+            int xs = Math.Sign(movementInput.x);
+            int ys = Math.Sign(movementInput.y);
+            direction = movementInput - new Vector3(xs * 0.2f, ys * 0.2f);
         }
-        else if (movementInput.x > 0)
-        {
-            if (movementInput.y > 0)
-            {
-                direction = new Vector3(0.5f, 0.5f);
-            }
-            else if (movementInput.y < 0)
-            {
-                direction = new Vector3(0.5f, -0.5f);
-            }
-            else
-            {
-                direction = new Vector3(1, 0, 0);
-            }
 
-            transform.position += direction;
-            UpdateFogOfWar();
-        }
+        transform.position = map.GetCellCenterWorld(map.WorldToCell(transform.position + direction));
+        UpdateFogOfWar();
     }
 
     public void OnMove(InputValue value)
     {
-        movementInput = value.Get<Vector2>();
+        movementInput = (Vector3) value.Get<Vector2>();
+        GetMovementDirection();
     }
 
 
@@ -131,16 +118,36 @@ public class UnitMovement : MonoBehaviour
 
     }
 
-    void OnMouseDown()
+    IEnumerator OnClick()
     {
-        // Point-to-click movement.
-        print("does this work?");
-        AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
-        List<Vector3Int> path = aStar.FindPath(selector.GetSelectedTile());
+        if (!moving)
+        {
+            moving = true;
+            AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
+            List<Vector3Int> path = aStar.FindPath(selector.GetSelectedTile());
+            Destroy(aStar);
 
-        // do stuff
+            foreach (Vector3Int coord in path)
+            {
+                yield return StartCoroutine(MoveToTile(coord));
+            }
+            moving = false;
+        }
+    }
 
-        Destroy(aStar);
-        print(path);
+
+    IEnumerator MoveToTile(Vector3Int tile)
+    {
+        Vector3 startingPosition = transform.position;
+        Vector3 destination = map.GetCellCenterWorld(tile);
+        float elapsedTime = 0f;
+        float totalTransitionTime = .5f;
+        while (transform.position != destination)
+        {
+            transform.position = Vector3.Lerp(startingPosition, destination, elapsedTime / totalTransitionTime);
+            UpdateFogOfWar();
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 }
