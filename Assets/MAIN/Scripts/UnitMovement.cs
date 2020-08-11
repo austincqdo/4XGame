@@ -32,6 +32,8 @@ public class UnitMovement : MonoBehaviour
 
     public int vision = 1;
 
+    SelectManager selectManager;
+
 
     void Awake()
     {
@@ -40,6 +42,9 @@ public class UnitMovement : MonoBehaviour
         map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
         selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
         fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
+
+        // For selecting/deselecting unit
+        selectManager = GameObject.Find("SelectManager").GetComponent<SelectManager>();
 
         // Track this unit with the camera
         GameObject.Find("GameManager").GetComponent<GameManager>().playerTransform = transform;
@@ -120,18 +125,22 @@ public class UnitMovement : MonoBehaviour
 
     IEnumerator OnClick()
     {
-        if (!moving)
+        if (unit.selected)
         {
-            moving = true;
-            AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
-            List<Vector3Int> path = aStar.FindPath(selector.GetSelectedTile());
-            Destroy(aStar);
-
-            foreach (Vector3Int coord in path)
+            if (!moving)
             {
-                yield return StartCoroutine(MoveToTile(coord));
+                moving = true;
+                AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
+                List<Vector3Int> path = aStar.FindPath(selector.GetSelectedTile());
+                Destroy(aStar);
+
+                foreach (Vector3Int coord in path)
+                {
+                    yield return StartCoroutine(MoveToTile(coord));
+                }
+                unit.Deselect();
+                moving = false;
             }
-            moving = false;
         }
     }
 

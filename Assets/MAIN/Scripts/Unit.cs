@@ -33,6 +33,22 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
+    public void Select()
+    {
+        Color tmp = gameObject.GetComponent<SpriteRenderer>().color;
+        tmp.a = .75f;
+        gameObject.GetComponent<SpriteRenderer>().color = tmp;
+        selected = true;
+    }
+
+    public void Deselect()
+    {
+        Color tmp = gameObject.GetComponent<SpriteRenderer>().color;
+        tmp.a = 1f;
+        gameObject.GetComponent<SpriteRenderer>().color = tmp;
+        selected = false;
+    }
+
     protected abstract void SetType();
 
     protected abstract void SetHealth();

@@ -63,7 +63,6 @@ public class AStar : MonoBehaviour
                 {
                     if ((i == 1 && j == 1) || (i == 1 && j == -1) || (i == 0 && j == 0)) { continue; }
                     neighbors.Add(new Vector3Int(tile.x + i, tile.y + j, tile.z));
-                    print(neighbors[neighbors.Count - 1]);
                 }
             }
         }

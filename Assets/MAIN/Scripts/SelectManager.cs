@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,36 +23,20 @@ public class SelectManager : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()), Vector2.zero);
             if (hit.collider)
             {
-                GameObject unitHit = hit.collider.gameObject;
-                if (!unitHit.GetComponent<Unit>().selected)
+                Unit unit = hit.collider.gameObject.GetComponent<Unit>();
+                if (!unit.selected)
                 {
-                    SelectUnit(unitHit);
+                    unit.Select();
                 }
             }
             else //no hit, so deselect all
             {
-                GameObject selectedUnit = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
-                if (selectedUnit)
+                GameObject selectedUnitObject = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
+                if (selectedUnitObject)
                 {
-                    DeselectUnit(selectedUnit);
+                    selectedUnitObject.GetComponent<Unit>().Deselect();
                 }
             }
         }
-    }
-
-    public void SelectUnit(GameObject o)
-    {
-        Color tmp = o.GetComponent<SpriteRenderer>().color;
-        tmp.a = .75f;
-        o.GetComponent<SpriteRenderer>().color = tmp;
-        o.GetComponent<Unit>().selected = true;
-    }
-
-    public void DeselectUnit(GameObject o)
-    {
-        Color tmp = o.GetComponent<SpriteRenderer>().color;
-        tmp.a = 1f;
-        o.GetComponent<SpriteRenderer>().color = tmp;
-        o.GetComponent<Unit>().selected = false;
     }
 }
