@@ -2,22 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PurpleUnit : MonoBehaviour
+public class PurpleUnit : Unit
 {
-    override void Awake()
+
+    protected override void SetType()
     {
         this.type = "PurpleUnit";
     }
 
-    // Start is called before the first frame update
-    void Start()
+    protected override void SetHealth()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        this.health = 100f;
     }
 }
