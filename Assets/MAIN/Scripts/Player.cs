@@ -60,9 +60,9 @@ public class Player : MonoBehaviour
         unit.owner = this;
         unit.id = units.Count;
 
-        // Display unit's UI.
+        // Add unit UI to canvas
         unit.healthBar.gameObject.GetComponent<RectTransform>().SetParent(canvas.GetComponent<RectTransform>());
-
+        unit.healthBar.gameObject.SetActive(false);
 
         units.Add(newUnit);
         gameManager.UpdateSpawnPosition();

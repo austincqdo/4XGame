@@ -64,6 +64,11 @@ public abstract class Unit : MonoBehaviour
         tmp.a = .75f;
         gameObject.GetComponent<SpriteRenderer>().color = tmp;
         selected = true;
+
+        if (!healthBar.gameObject.activeSelf)
+        {
+            healthBar.gameObject.SetActive(true);
+        }
     }
 
     public void Deselect()
@@ -72,6 +77,8 @@ public abstract class Unit : MonoBehaviour
         tmp.a = 1f;
         gameObject.GetComponent<SpriteRenderer>().color = tmp;
         selected = false;
+
+        healthBar.gameObject.SetActive(false);
     }
 
     protected void SetStartingHealth()
