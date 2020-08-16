@@ -1,36 +1,61 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Text;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public abstract class Unit : MonoBehaviour
 {
     public Player owner;
     public int id { get; set; }
     public string type { get; set; }
-    public float health { get; set; }
     public bool selected { get; set; } = false;
-    public SpawnManager spawnManager { get; set; }
 
-    protected void Awake()
+    #region UI
+    public HealthBar healthBar;
+    public float maxHealth { get; set; }
+    public float currentHealth { get; set; }
+
+
+    #endregion
+
+    protected virtual void Awake()
     {
-        SetType();
-        SetHealth();
+        GameObject healthbarPrefab = (GameObject)Resources.Load("UI/Health Bar");
+        this.healthBar = Instantiate(healthbarPrefab).GetComponent<HealthBar>();
     }
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        this.spawnManager = owner.GetComponent<SpawnManager>();
+        
+        healthBar.SetMaxHealth(maxHealth);
+        //this.healthBar = GameObject.Find("Canvas").GetComponentInChildren<HealthBar>();
+        //healthBar.SetMaxHealth(maxHealth);
+        SetStartingHealth();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
-            spawnManager.DespawnUnit(gameObject);
+            owner.GetUnits().Remove(gameObject);
+            Destroy(gameObject);
+        } 
+
+        // test health bar
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(20);
         }
+    }
+
+    protected void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
     }
 
     public void Select()
@@ -49,7 +74,18 @@ public abstract class Unit : MonoBehaviour
         selected = false;
     }
 
-    protected abstract void SetType();
+    protected void SetStartingHealth()
+    {
+        currentHealth = maxHealth;
+    }
 
-    protected abstract void SetHealth();
+    public void ShowUI()
+    {
+        
+    }
+
+    public void HideUI()
+    {
+
+    }
 }

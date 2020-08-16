@@ -1,13 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    #region Camera
     public CameraFollow cameraFollow;
-    public Transform playerTransform;
+    public Transform unitTransform;
+    #endregion
+
+    private Tilemap map;
+    private Vector3 spawnPosition;
 
     //// Delete this when I implement fetching players from scene.
     //private Player[] otherPlayersArr = { new Player("P2") };
@@ -23,20 +31,19 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        cameraFollow.Setup(() => playerTransform.position);
-        //AddPlayers();
+        cameraFollow.Setup(() => unitTransform.position);
+        
+        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
+        spawnPosition = map.GetCellCenterWorld(new Vector3Int(-3, 3, 0));
     }
 
+    public Vector3 GetSpawnPosition()
+    {
+        return this.spawnPosition;
+    }
 
-    //public void NextPlayer()
-    //{
-    //    otherPlayers.Enqueue(currentPlayer);
-    //    currentPlayer = otherPlayers.Dequeue();
-    //}
-
-    //void AddPlayers()
-    //{
-    //    currentPlayer = new Player("P1");
-    //    otherPlayers = new Queue<Player>(otherPlayersArr);
-    //}
+    public void UpdateSpawnPosition()
+    {
+        spawnPosition = map.GetCellCenterWorld(map.WorldToCell(spawnPosition) + new Vector3Int(0, 1, 0));
+    }
 }

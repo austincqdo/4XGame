@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class PurpleUnit : Unit
 {
-
-    protected override void SetType()
+    protected override void Awake()
     {
+        base.Awake();
         this.type = "PurpleUnit";
-    }
-
-    protected override void SetHealth()
-    {
-        this.health = 100f;
+        this.maxHealth = 150f;
     }
 }

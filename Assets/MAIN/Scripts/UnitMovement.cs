@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
+using System.Runtime.InteropServices;
 //using UnityEngine.EventSystems;
 
 
@@ -47,7 +48,7 @@ public class UnitMovement : MonoBehaviour
         selectManager = GameObject.Find("SelectManager").GetComponent<SelectManager>();
 
         // Track this unit with the camera
-        GameObject.Find("GameManager").GetComponent<GameManager>().playerTransform = transform;
+        GameObject.Find("GameManager").GetComponent<GameManager>().unitTransform = transform;
     }
 
     // Start is called before the first frame update
@@ -61,7 +62,6 @@ public class UnitMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         //if (movementInput.x == 0)
         //{
         //    hasMoved = false;

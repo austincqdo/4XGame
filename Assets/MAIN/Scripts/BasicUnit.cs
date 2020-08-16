@@ -6,16 +6,10 @@ using UnityEngine.InputSystem;
 public class BasicUnit : Unit
 {
 
-
-
-    protected override void SetType()
+    protected override void Awake()
     {
+        base.Awake();
         this.type = "BasicUnit";
+        this.maxHealth = 100f;
     }
-
-    protected override void SetHealth()
-    {
-        this.health = 100f;
-    }
-
 }

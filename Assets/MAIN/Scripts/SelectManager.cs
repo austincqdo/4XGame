@@ -20,22 +20,27 @@ public class SelectManager : MonoBehaviour
     {
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()), Vector2.zero);
-            if (hit.collider)
+            DetectSelect();
+        }
+    }
+
+    void DetectSelect()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()), Vector2.zero);
+        if (hit.collider)
+        {
+            Unit unit = hit.collider.gameObject.GetComponent<Unit>();
+            if (!unit.selected)
             {
-                Unit unit = hit.collider.gameObject.GetComponent<Unit>();
-                if (!unit.selected)
-                {
-                    unit.Select();
-                }
+                unit.Select();
             }
-            else //no hit, so deselect all
+        }
+        else //no hit, so deselect all
+        {
+            GameObject selectedUnitObject = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
+            if (selectedUnitObject)
             {
-                GameObject selectedUnitObject = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
-                if (selectedUnitObject)
-                {
-                    selectedUnitObject.GetComponent<Unit>().Deselect();
-                }
+                selectedUnitObject.GetComponent<Unit>().Deselect();
             }
         }
     }
