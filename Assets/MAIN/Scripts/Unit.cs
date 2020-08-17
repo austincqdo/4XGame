@@ -13,17 +13,17 @@ public abstract class Unit : MonoBehaviour
     public bool selected { get; set; } = false;
 
     #region UI
+    public GameObject canvas;
     public HealthBar healthBar;
     public float maxHealth { get; set; }
     public float currentHealth { get; set; }
-
-
     #endregion
 
     protected virtual void Awake()
     {
-        GameObject healthbarPrefab = (GameObject)Resources.Load("UI/Health Bar");
-        this.healthBar = Instantiate(healthbarPrefab).GetComponent<HealthBar>();
+        GameObject healthbarPrefab = (GameObject) Resources.Load("UI/Health Bar");
+        canvas = GameObject.Find("Canvas");
+        this.healthBar = Instantiate(healthbarPrefab, canvas.GetComponent<RectTransform>()).GetComponent<HealthBar>();
     }
 
     // Start is called before the first frame update
@@ -31,8 +31,6 @@ public abstract class Unit : MonoBehaviour
     {
         
         healthBar.SetMaxHealth(maxHealth);
-        //this.healthBar = GameObject.Find("Canvas").GetComponentInChildren<HealthBar>();
-        //healthBar.SetMaxHealth(maxHealth);
         SetStartingHealth();
     }
 
@@ -67,7 +65,7 @@ public abstract class Unit : MonoBehaviour
 
         if (!healthBar.gameObject.activeSelf)
         {
-            healthBar.gameObject.SetActive(true);
+            ShowUI();
         }
     }
 
@@ -78,7 +76,7 @@ public abstract class Unit : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().color = tmp;
         selected = false;
 
-        healthBar.gameObject.SetActive(false);
+        HideUI();
     }
 
     protected void SetStartingHealth()
@@ -88,11 +86,11 @@ public abstract class Unit : MonoBehaviour
 
     public void ShowUI()
     {
-        
+        healthBar.gameObject.SetActive(true);
     }
 
     public void HideUI()
     {
-
+        healthBar.gameObject.SetActive(false);
     }
 }

@@ -96,8 +96,11 @@ public class UnitMovement : MonoBehaviour
 
     public void OnMove(InputValue value)
     {
-        movementInput = (Vector3) value.Get<Vector2>();
-        GetMovementDirection();
+        if (unit.selected)
+        {
+            movementInput = (Vector3)value.Get<Vector2>();
+            GetMovementDirection();
+        }
     }
 
 

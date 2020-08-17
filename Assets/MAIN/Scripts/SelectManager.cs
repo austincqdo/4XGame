@@ -1,4 +1,4 @@
-﻿using System.CodeDom;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,16 +32,23 @@ public class SelectManager : MonoBehaviour
             Unit unit = hit.collider.gameObject.GetComponent<Unit>();
             if (!unit.selected)
             {
+                DeselectAll();
                 unit.Select();
             }
         }
         else //no hit, so deselect all
         {
-            GameObject selectedUnitObject = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
-            if (selectedUnitObject)
-            {
-                selectedUnitObject.GetComponent<Unit>().Deselect();
-            }
+            DeselectAll();
+        }
+    }
+
+    public void DeselectAll()
+    {
+        Debug.Log(player);
+        GameObject selectedUnitObject = player.GetUnits().Find(s => s.GetComponent<Unit>().selected);
+        if (selectedUnitObject)
+        {
+            selectedUnitObject.GetComponent<Unit>().Deselect();
         }
     }
 }

@@ -7,9 +7,6 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public GameManager gameManager;
-    public SelectManager selectManager;
-    public GameObject canvas;
-
     private Tilemap map;
 
     [SerializeField]
@@ -21,7 +18,6 @@ public class Player : MonoBehaviour
     {
         map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        canvas = GameObject.Find("Canvas");
     }
     
     // Start is called before the first frame update
@@ -36,6 +32,11 @@ public class Player : MonoBehaviour
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             SpawnUnit();
+        }
+
+        if (Mouse.current.rightButton.wasPressedThisFrame)
+        {
+            DetectSelect();
         }
     }
 
@@ -60,11 +61,40 @@ public class Player : MonoBehaviour
         unit.owner = this;
         unit.id = units.Count;
 
-        // Add unit UI to canvas
-        unit.healthBar.gameObject.GetComponent<RectTransform>().SetParent(canvas.GetComponent<RectTransform>());
-        unit.healthBar.gameObject.SetActive(false);
-
         units.Add(newUnit);
+
+        // Select only new unit.
+        DeselectAll();
+        unit.Select();
+
         gameManager.UpdateSpawnPosition();
+    }
+
+
+    void DetectSelect()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()), Vector2.zero);
+        if (hit.collider)
+        {
+            Unit unit = hit.collider.gameObject.GetComponent<Unit>();
+            if (!unit.selected)
+            {
+                DeselectAll();
+                unit.Select();
+            }
+        }
+        else //no hit, so deselect all
+        {
+            DeselectAll();
+        }
+    }
+
+    public void DeselectAll()
+    {
+        GameObject selectedUnitObject = units.Find(s => s.GetComponent<Unit>().selected);
+        if (selectedUnitObject)
+        {
+            selectedUnitObject.GetComponent<Unit>().Deselect();
+        }
     }
 }
