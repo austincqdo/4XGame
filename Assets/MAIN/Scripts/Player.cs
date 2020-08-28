@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     void Awake()
     {
         map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
+        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     
 
@@ -109,5 +110,12 @@ public class Player : MonoBehaviour
                 }
                 break;
         }
+
+        //IEnumerator ShowHealthTemp(Unit unit)
+        //{
+        //    unit.ShowUI();
+        //    yield return new WaitForSeconds(2f);
+        //    unit.HideUI();
+        //}
     }
 }

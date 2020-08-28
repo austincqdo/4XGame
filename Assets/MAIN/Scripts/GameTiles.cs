@@ -32,24 +32,14 @@ public class GameTiles : MonoBehaviour
         foreach (Vector3Int coord in Tilemap.cellBounds.allPositionsWithin)
         {
             if (!Tilemap.HasTile(coord)) { continue; }
-
             WorldTile tile = new WorldTile
             {
                 Coord = coord,
                 WorldLocation = Tilemap.GetCellCenterWorld(coord),
                 Occupied = false
             };
-
             tiles.Add(tile.WorldLocation, tile);
         }
-        //now loop through each WorldTile again to get neighbors.
-        foreach (var tile in tiles)
-        {
-            //Debug.Log(tile.Key);
-            Collider2D[] neighbors = Physics2D.OverlapCircleAll((Vector2)tile.Key, 3.0f);
-            //Debug.Log(neighbors[0].gameObject.transform.position);
-        }
-
     }
 
     public void UpdateFogOfWar(Vector3 position)

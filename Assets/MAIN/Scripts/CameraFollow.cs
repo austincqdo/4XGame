@@ -5,7 +5,13 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    //private GameManager gameManager;
     private Func<Vector3> GetCameraFollowPosition;
+
+    void Start()
+    {
+        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
     public void Setup(Func<Vector3> GetCameraFollowPosition)
     {

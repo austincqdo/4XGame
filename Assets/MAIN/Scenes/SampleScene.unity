@@ -378,8 +378,6 @@ GameObject:
   - component: {fileID: 945823794}
   - component: {fileID: 945823793}
   - component: {fileID: 945823795}
-  - component: {fileID: 945823798}
-  - component: {fileID: 945823796}
   m_Layer: 0
   m_Name: BaseTilemap
   m_TagString: Untagged
@@ -395,7 +393,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945823791}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.268, y: -1.593, z: 0}
+  m_LocalPosition: {x: 3.34, y: -1.92, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 0}
   m_Children: []
   m_Father: {fileID: 684079762}
@@ -1453,43 +1451,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08289b9cc67604c60ad1f78c5ed01187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!19719996 &945823796
-TilemapCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945823791}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_MaximumTileChangeCount: 1000
-  m_ExtrusionFactor: 0.00001
---- !u!50 &945823798
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945823791}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &1228998998
 GameObject:
   m_ObjectHideFlags: 0
@@ -3602,7 +3563,5 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 307360464}
-    m_RemovedComponents:
-    - {fileID: 0}
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e8e50c13bc2443e28b41f1ab4d822f5, type: 3}

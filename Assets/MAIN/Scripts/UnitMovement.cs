@@ -38,10 +38,8 @@ public class UnitMovement : MonoBehaviour
     {
         moving = false;
 
-        GameObject baseTilemap = GameObject.Find("BaseTilemap");
-        map = baseTilemap.GetComponent<Tilemap>();
-        selector = baseTilemap.GetComponent<TileSelector>();
-        
+        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
+        selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
         fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
     }
 
@@ -104,22 +102,6 @@ public class UnitMovement : MonoBehaviour
         transform.position -= direction;
     }
 
-
-    //void UpdateFogOfWar()
-    //{
-    //    Vector3Int currentPlayerTile = fogOfWar.WorldToCell(transform.position);
-
-    //    //Clear the surrounding tiles
-    //    for (int x = -vision; x <= vision; x++)
-    //    {
-    //        for (int y = -vision; y <= vision; y++)
-    //        {
-    //            fogOfWar.SetTile(currentPlayerTile + new Vector3Int(x, y, 0), null);
-    //        }
-
-    //    }
-
-    //}
 
     IEnumerator OnClick()
     {
