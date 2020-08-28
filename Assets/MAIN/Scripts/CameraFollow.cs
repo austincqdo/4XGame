@@ -5,13 +5,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private GameManager gameManager;
     private Func<Vector3> GetCameraFollowPosition;
-
-    void Start()
-    {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
 
     public void Setup(Func<Vector3> GetCameraFollowPosition)
     {
@@ -21,7 +15,7 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.unitTransform != null)
+        if (GameManager.instance.unitTransform != null)
         {
             Vector3 cameraFollowPosition = GetCameraFollowPosition();
             cameraFollowPosition.z = transform.position.z;

@@ -7,7 +7,7 @@ public class PurpleUnit : Unit
     protected override void Awake()
     {
         base.Awake();
-        this.type = "PurpleUnit";
+        this.type = "Purple Unit";
         this.maxHealth = 150f;
     }
 }

@@ -14,15 +14,14 @@ public class GameManager : MonoBehaviour
     public Transform unitTransform;
     #endregion
 
-    private Tilemap map;
+    public Tilemap map;
     private Vector3 spawnPosition;
 
     //// Delete this when I implement fetching players from scene.
     //private Player[] otherPlayersArr = { new Player("P2") };
 
-    //public Player currentPlayer;
+    public Player currentPlayer;
     //public Queue<Player> otherPlayers;
-    //// Start is called before the first frame update
 
     void Awake()
     {
@@ -31,9 +30,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        cameraFollow.Setup(() => unitTransform.position);
-        
-        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
+        cameraFollow.Setup(() => unitTransform.position);        
         spawnPosition = map.GetCellCenterWorld(new Vector3Int(-3, 3, 0));
     }
 

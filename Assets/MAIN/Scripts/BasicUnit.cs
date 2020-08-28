@@ -9,7 +9,7 @@ public class BasicUnit : Unit
     protected override void Awake()
     {
         base.Awake();
-        this.type = "BasicUnit";
+        this.type = "Basic Unit";
         this.maxHealth = 100f;
     }
 }

@@ -33,22 +33,16 @@ public class UnitMovement : MonoBehaviour
 
     public int vision = 1;
 
-    SelectManager selectManager;
-
 
     void Awake()
     {
         moving = false;
 
-        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
-        selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
+        GameObject baseTilemap = GameObject.Find("BaseTilemap");
+        map = baseTilemap.GetComponent<Tilemap>();
+        selector = baseTilemap.GetComponent<TileSelector>();
+        
         fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
-
-        // For selecting/deselecting unit
-        selectManager = GameObject.Find("SelectManager").GetComponent<SelectManager>();
-
-        // Track this unit with the camera
-        GameObject.Find("GameManager").GetComponent<GameManager>().unitTransform = transform;
     }
 
     // Start is called before the first frame update
@@ -62,44 +56,45 @@ public class UnitMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (movementInput.x == 0)
-        //{
-        //    hasMoved = false;
-        //}
-        //else if (movementInput.x != 0 && !hasMoved)
-        //{
-        //    hasMoved = true;
-
-        //    GetMovementDirection();
-        //}
-
+        if (movementInput.x == 0)
+        {
+            hasMoved = false;
+        }
+        else if (movementInput.x != 0 && !hasMoved)
+        {
+            hasMoved = true;
+            GameTiles.instance.tiles[transform.position].Occupied = false;
+            GetMovementDirection();
+        }
     }
 
     public void GetMovementDirection()
     {
+        int xs = Math.Sign(movementInput.x);
+        int ys = Math.Sign(movementInput.y);
         if (movementInput.y == 0f)
         {
-            direction = movementInput;
-        } else if (movementInput.x == 0f)
-        {
-            direction = new Vector3();
+            direction = new Vector3(xs * 3, 0, 0);
         } else
         {
-            int xs = Math.Sign(movementInput.x);
-            int ys = Math.Sign(movementInput.y);
-            direction = movementInput - new Vector3(xs * 0.2f, ys * 0.2f);
+            direction = new Vector3(xs * 1.5f, ys * 1.5f, 0);
         }
 
-        transform.position = map.GetCellCenterWorld(map.WorldToCell(transform.position + direction));
-        UpdateFogOfWar();
+        Vector3 futurePosition = map.GetCellCenterWorld(map.WorldToCell(transform.position + direction));
+        WorldTile tile;
+        if (GameTiles.instance.tiles.TryGetValue(futurePosition, out tile))
+        {
+            transform.position = futurePosition;
+            tile.Occupied = true;
+            GameTiles.instance.UpdateFogOfWar(transform.position);
+        }
     }
 
     public void OnMove(InputValue value)
     {
-        if (unit.selected)
+        if (owner.GetSelectedUnit() == unit)
         {
-            movementInput = (Vector3)value.Get<Vector2>();
-            GetMovementDirection();
+            movementInput = (Vector3) value.Get<Vector2>();
         }
     }
 
@@ -110,31 +105,34 @@ public class UnitMovement : MonoBehaviour
     }
 
 
-    void UpdateFogOfWar()
-    {
-        Vector3Int currentPlayerTile = fogOfWar.WorldToCell(transform.position);
+    //void UpdateFogOfWar()
+    //{
+    //    Vector3Int currentPlayerTile = fogOfWar.WorldToCell(transform.position);
 
-        //Clear the surrounding tiles
-        for (int x = -vision; x <= vision; x++)
-        {
-            for (int y = -vision; y <= vision; y++)
-            {
-                fogOfWar.SetTile(currentPlayerTile + new Vector3Int(x, y, 0), null);
-            }
+    //    //Clear the surrounding tiles
+    //    for (int x = -vision; x <= vision; x++)
+    //    {
+    //        for (int y = -vision; y <= vision; y++)
+    //        {
+    //            fogOfWar.SetTile(currentPlayerTile + new Vector3Int(x, y, 0), null);
+    //        }
 
-        }
+    //    }
 
-    }
+    //}
 
     IEnumerator OnClick()
     {
-        if (unit.selected)
+        Vector3Int destination = selector.GetSelectedTile();
+        // Check if unit we want to move is selected and if the tile we want to move to isn't occupied.
+        if (owner.GetSelectedUnit() == unit && GameTiles.instance.tiles[map.GetCellCenterWorld(destination)].Occupied == false)
         {
             if (!moving)
             {
+                GameTiles.instance.tiles[transform.position].Occupied = false;
                 moving = true;
                 AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
-                List<Vector3Int> path = aStar.FindPath(selector.GetSelectedTile());
+                List<Vector3Int> path = aStar.FindPath(destination);
                 Destroy(aStar);
 
                 foreach (Vector3Int coord in path)
@@ -143,6 +141,7 @@ public class UnitMovement : MonoBehaviour
                 }
                 unit.Deselect();
                 moving = false;
+                GameTiles.instance.tiles[transform.position].Occupied = true;
             }
         }
     }
@@ -157,7 +156,7 @@ public class UnitMovement : MonoBehaviour
         while (transform.position != destination)
         {
             transform.position = Vector3.Lerp(startingPosition, destination, elapsedTime / totalTransitionTime);
-            UpdateFogOfWar();
+            GameTiles.instance.UpdateFogOfWar(transform.position);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
