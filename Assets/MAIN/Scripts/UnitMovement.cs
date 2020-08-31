@@ -106,8 +106,9 @@ public class UnitMovement : MonoBehaviour
     IEnumerator OnClick()
     {
         Vector3Int destination = selector.GetSelectedTile();
-        // Check if unit we want to move is selected and if the tile we want to move to isn't occupied.
-        if (owner.GetSelectedUnit() == unit && GameTiles.instance.tiles[map.GetCellCenterWorld(destination)].Occupied == false)
+        //Debug.Log(destination);
+        // Check if unit we want to move is selected and if the tile we want to move to exists and isn't occupied.
+        if (owner.GetSelectedUnit() == unit && GameTiles.instance.tiles.ContainsKey(map.GetCellCenterWorld(destination)) && GameTiles.instance.tiles[map.GetCellCenterWorld(destination)].Occupied == false)
         {
             if (!moving)
             {

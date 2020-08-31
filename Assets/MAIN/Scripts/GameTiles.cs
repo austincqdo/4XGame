@@ -36,10 +36,53 @@ public class GameTiles : MonoBehaviour
             {
                 Coord = coord,
                 WorldLocation = Tilemap.GetCellCenterWorld(coord),
-                Occupied = false
+                Occupied = false,
+                Neighbors = new List<WorldTile>()
             };
             tiles.Add(tile.WorldLocation, tile);
         }
+
+        // Iterate through again to set neighbors.
+        foreach (var tile in tiles)
+        {
+            if (tile.Value.Coord.y % 2 == 0) // even tile row;
+            {
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        if ((i == 1 && j == 1) || (i == 1 && j == -1) || (i == 0 && j == 0)) { continue; }
+
+                        Vector3Int neighborTile = new Vector3Int(tile.Value.Coord.x + i, tile.Value.Coord.y + j, tile.Value.Coord.z);
+                        WorldTile _tile;
+                        Vector3 neighborTileCenter = Tilemap.GetCellCenterWorld(neighborTile);
+                        if (tiles.TryGetValue(neighborTileCenter, out _tile))
+                        {
+                            tile.Value.Neighbors.Add(tiles[neighborTileCenter]);
+                        }
+                    }
+                }
+            }
+            else // odd tile row
+            {
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        if ((i == -1 && j == -1) || (i == -1 && j == 1) || (i == 0 && j == 0)) { continue; }
+
+                        Vector3Int neighborTile = new Vector3Int(tile.Value.Coord.x + i, tile.Value.Coord.y + j, tile.Value.Coord.z);
+                        WorldTile _tile;
+                        Vector3 neighborTileCenter = Tilemap.GetCellCenterWorld(neighborTile);
+                        if (tiles.TryGetValue(neighborTileCenter, out _tile))
+                        {
+                            tile.Value.Neighbors.Add(tiles[neighborTileCenter]);
+                        }
+                    }
+                }
+            }
+        }
+            
     }
 
     public void UpdateFogOfWar(Vector3 position)
