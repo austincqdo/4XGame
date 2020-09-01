@@ -121,4 +121,14 @@ public abstract class Unit : MonoBehaviour
         yield return new WaitForSeconds(.1f);
         gameObject.GetComponent<SpriteRenderer>().color = tmp;
     }
+
+    public void FoundTerritory()
+    {
+        WorldTile currTile = GameTiles.instance.tiles[transform.position];
+        owner.ClaimTile(currTile);
+        foreach (WorldTile n in currTile.Neighbors)
+        {
+            owner.ClaimTile(n);
+        }
+    }
 }

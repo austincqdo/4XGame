@@ -7,7 +7,6 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
-    //public GameManager gameManager;
     private Tilemap map;
 
     private Unit selectedUnit;
@@ -16,11 +15,15 @@ public class Player : MonoBehaviour
     [Tooltip("List of units owned by player.")]
     private List<GameObject> units = new List<GameObject>();
 
+    #region territory
+    public Color PlayerColor { get; set; }
+    #endregion
+
 
     void Awake()
     {
         map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
-        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        PlayerColor = Color.blue;
     }
     
 
@@ -30,6 +33,14 @@ public class Player : MonoBehaviour
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             SpawnUnit();
+        }
+
+        if (Keyboard.current.hKey.wasPressedThisFrame)
+        {
+            if (selectedUnit)
+            {
+                selectedUnit.FoundTerritory();
+            }
         }
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
@@ -110,12 +121,11 @@ public class Player : MonoBehaviour
                 }
                 break;
         }
+    }
 
-        //IEnumerator ShowHealthTemp(Unit unit)
-        //{
-        //    unit.ShowUI();
-        //    yield return new WaitForSeconds(2f);
-        //    unit.HideUI();
-        //}
+    public void ClaimTile(WorldTile tile)
+    {
+        tile.Owner = this;
+        map.SetColor(tile.Coord, PlayerColor);
     }
 }

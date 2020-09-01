@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class GameTiles : MonoBehaviour
 {
     public static GameTiles instance;
-    public Tilemap Tilemap;
+    public Tilemap Map;
     public Tilemap FogOfWar;
     int vision = 1;
 
@@ -29,17 +29,21 @@ public class GameTiles : MonoBehaviour
     private void GetWorldTiles()
     {
         tiles = new Dictionary<Vector3, WorldTile>();
-        foreach (Vector3Int coord in Tilemap.cellBounds.allPositionsWithin)
+        foreach (Vector3Int coord in Map.cellBounds.allPositionsWithin)
         {
-            if (!Tilemap.HasTile(coord)) { continue; }
+            if (!Map.HasTile(coord)) { continue; }
             WorldTile tile = new WorldTile
             {
                 Coord = coord,
-                WorldLocation = Tilemap.GetCellCenterWorld(coord),
+                WorldLocation = Map.GetCellCenterWorld(coord),
                 Occupied = false,
-                Neighbors = new List<WorldTile>()
+                Neighbors = new List<WorldTile>(),
+                Owner = null
             };
             tiles.Add(tile.WorldLocation, tile);
+
+            // Set tile flags to None so color can be set.
+            Map.SetTileFlags(tile.Coord, TileFlags.None);
         }
 
         // Iterate through again to set neighbors.
@@ -54,11 +58,11 @@ public class GameTiles : MonoBehaviour
                         if ((i == 1 && j == 1) || (i == 1 && j == -1) || (i == 0 && j == 0)) { continue; }
 
                         Vector3Int neighborTile = new Vector3Int(tile.Value.Coord.x + i, tile.Value.Coord.y + j, tile.Value.Coord.z);
+                        Vector3 neighborTileCenter = Map.GetCellCenterWorld(neighborTile);
                         WorldTile _tile;
-                        Vector3 neighborTileCenter = Tilemap.GetCellCenterWorld(neighborTile);
                         if (tiles.TryGetValue(neighborTileCenter, out _tile))
                         {
-                            tile.Value.Neighbors.Add(tiles[neighborTileCenter]);
+                            tile.Value.Neighbors.Add(_tile);
                         }
                     }
                 }
@@ -73,7 +77,7 @@ public class GameTiles : MonoBehaviour
 
                         Vector3Int neighborTile = new Vector3Int(tile.Value.Coord.x + i, tile.Value.Coord.y + j, tile.Value.Coord.z);
                         WorldTile _tile;
-                        Vector3 neighborTileCenter = Tilemap.GetCellCenterWorld(neighborTile);
+                        Vector3 neighborTileCenter = Map.GetCellCenterWorld(neighborTile);
                         if (tiles.TryGetValue(neighborTileCenter, out _tile))
                         {
                             tile.Value.Neighbors.Add(tiles[neighborTileCenter]);

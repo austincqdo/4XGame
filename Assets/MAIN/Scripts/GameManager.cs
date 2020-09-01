@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,6 +14,11 @@ public class GameManager : MonoBehaviour
 
     public Tilemap map;
     private Vector3 spawnPosition;
+
+    #region Turn System
+    public int TurnCounter { get; set; }
+    #endregion
+
 
     //// Delete this when I implement fetching players from scene.
     //private Player[] otherPlayersArr = { new Player("P2") };

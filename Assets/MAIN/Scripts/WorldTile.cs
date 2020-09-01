@@ -9,4 +9,5 @@ public class WorldTile
     public Vector3 WorldLocation { get; set; }
     public bool Occupied { get; set; }
     public List<WorldTile> Neighbors { get; set; }
+    public Player Owner { get; set; }
 }

@@ -7,37 +7,47 @@ using UnityEngine.InputSystem;
 public class TileSelector : MonoBehaviour
 {
     private Tilemap map;
-    private Vector3Int tileCoord;
+    private Vector3Int currTileCoord;
     private Vector3Int prevTileCoord;
     private Color prevTileColor;
+
+    public Color DefaultColor { get; set; } = new Color(1f, 1f, 1f, 1f);
+
 
     // Start is called before the first frame update
     void Start()
     {
         map = GetComponent<Tilemap>();
-        prevTileCoord = new Vector3Int(-9999, -9999, -9999);
     }
 
     // Update is called once per frame
     void Update()
     { 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        tileCoord = map.WorldToCell(mousePos);
-        if (tileCoord != prevTileCoord)
+        currTileCoord = map.WorldToCell(mousePos);
+        if (currTileCoord != prevTileCoord && prevTileCoord != null)
         {
-            prevTileColor = map.GetColor(tileCoord);
-            map.SetTileFlags(tileCoord, TileFlags.None);
-            map.SetColor(tileCoord, Color.green);
-            if (prevTileCoord != new Vector3Int(-9999, -9999, -9999))
+            WorldTile prevWorldTile;
+            if (GameTiles.instance.tiles.TryGetValue(map.GetCellCenterWorld(prevTileCoord), out prevWorldTile)) // don't select outside the map.
             {
+                if (prevWorldTile.Owner)
+                {
+                    prevTileColor = prevWorldTile.Owner.PlayerColor;
+                }
+                else
+                {
+                    prevTileColor = DefaultColor;
+                }
+                map.SetColor(currTileCoord, Color.green);
                 map.SetColor(prevTileCoord, prevTileColor);
             }
-            prevTileCoord = tileCoord;
+            
         }
+        prevTileCoord = currTileCoord;
     }
 
     public Vector3Int GetSelectedTile()
     {
-        return tileCoord;
+        return currTileCoord;
     }
 }
