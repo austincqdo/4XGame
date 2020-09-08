@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PurpleUnit : Unit
+public class OrangeBasicUnit : Unit
 {
+
     protected override void Awake()
     {
         base.Awake();
-        this.type = "Purple Unit";
-        this.maxHealth = 150f;
+        this.type = "Basic Unit";
+        this.maxHealth = 100f;
     }
 }

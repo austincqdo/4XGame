@@ -50,47 +50,6 @@ public class AStar : MonoBehaviour
         return new List<Vector3Int>();
     }
 
-
-    //private List<Vector3Int> GetNeighbors(Vector3Int tile)
-    //{
-    //    List<Vector3Int> neighbors = new List<Vector3Int>();
-    //    if (tile.y % 2 == 0) // even tile row;
-    //    {
-    //        for (int i = -1; i <= 1; i++)
-    //        {
-    //            for (int j = -1; j <= 1; j++)
-    //            {
-    //                if ((i == 1 && j == 1) || (i == 1 && j == -1) || (i == 0 && j == 0)) { continue; }
-                    
-    //                Vector3Int neighborTile = new Vector3Int(tile.x + i, tile.y + j, tile.z);
-    //                WorldTile _tile;
-    //                if (GameTiles.instance.tiles.TryGetValue(map.GetCellCenterWorld(neighborTile), out _tile))
-    //                {
-    //                    neighbors.Add(neighborTile);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    else // odd tile row
-    //    {
-    //        for (int i = -1; i <= 1; i++)
-    //        {
-    //            for (int j = -1; j <= 1; j++)
-    //            {
-    //                if ((i == -1 && j == -1) || (i == -1 && j == 1) || (i == 0 && j == 0)) { continue; }
-                    
-    //                Vector3Int neighborTile = new Vector3Int(tile.x + i, tile.y + j, tile.z);
-    //                WorldTile _tile;
-    //                if (GameTiles.instance.tiles.TryGetValue(map.GetCellCenterWorld(neighborTile), out _tile))
-    //                {
-    //                    neighbors.Add(neighborTile);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return neighbors;
-    //}
-
     private float PriorityFunction((WorldTile, List<Vector3Int>) node)
     {
         return node.Item2.Count + ManhattanDistance(node.Item1.Coord, goal);

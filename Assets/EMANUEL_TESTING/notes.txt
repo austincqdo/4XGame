@@ -1,0 +1,32 @@
+Player Object
+
+
+    Local Client
+    - 
+
+
+
+    Server
+    - a
+
+
+
+
+Units
+- have a synclist on Player Object to map which Units belong to the Player
+- player will literally COMMAND units by issuing unit command to Server, Server will verify that Player actually owns Unit before executing unit command
+
+
+Server
+    - controls units + tiles
+    - player resources + player unlocks
+
+
+
+
+
+Tiles
+- terrain attributes (static?)
+- territory attribute (who owns it?)
+
+

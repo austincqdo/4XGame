@@ -19,36 +19,50 @@ public class Player : MonoBehaviour
     public Color PlayerColor { get; set; }
     #endregion
 
+    public int PlayerID { get; set; }
+
+    public string Theme { get; set; }
 
     void Awake()
     {
         map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
         PlayerColor = Color.blue;
     }
-    
+
+    void Start()
+    {
+        this.PlayerID = GameManager.instance.NumPlayers;
+        GameManager.instance.NumPlayers += 1;
+
+        this.Theme = GameManager.instance.PlayerThemes[PlayerID];
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.gKey.wasPressedThisFrame)
+        if (GameManager.instance.CurrentPlayer == this.PlayerID)
         {
-            SpawnUnit();
-        }
-
-        if (Keyboard.current.hKey.wasPressedThisFrame)
-        {
-            if (selectedUnit)
+            if (Keyboard.current.gKey.wasPressedThisFrame)
             {
-                selectedUnit.FoundTerritory();
+                SpawnUnit();
             }
-        }
 
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            ProcessClick("Right");
-        } else if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            ProcessClick("Left");
+            if (Keyboard.current.hKey.wasPressedThisFrame)
+            {
+                if (selectedUnit)
+                {
+                    selectedUnit.FoundTerritory();
+                }
+            }
+
+            if (Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                ProcessClick("Right");
+            }
+            else if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                ProcessClick("Left");
+            }
         }
     }
 
@@ -75,11 +89,11 @@ public class Player : MonoBehaviour
 
     private void SpawnUnit(string unitType = "BasicUnit")
     {
-        GameObject unitPrefab = (GameObject) Resources.Load("UnitTypes/" + unitType);
+        GameObject unitPrefab = (GameObject) Resources.Load("Units/" + Theme + "/" + unitType);
         GameObject newUnit = Instantiate(unitPrefab, GameManager.instance.GetSpawnPosition(), Quaternion.identity);
 
         // Initialize unit fields
-        Unit unit = newUnit.GetComponent(unitType) as Unit;
+        Unit unit = newUnit.GetComponent(Theme + unitType) as Unit;
         unit.owner = this;
         unit.id = units.Count;
         unit.nameInUI.text = unit.type + " " + unit.id;
