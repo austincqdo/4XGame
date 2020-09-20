@@ -19,8 +19,6 @@ public class UnitMovement : MonoBehaviour
     private Unit unit;
     private Player owner;
 
-    private int id;
-
     private Vector3 movementInput;
     private Vector3 direction;
 
@@ -33,14 +31,18 @@ public class UnitMovement : MonoBehaviour
 
     public int vision = 1;
 
+    #region path
+    private AStar aStar;
+    private Vector3Int? highlightedTileCoord; // only updates when unit is selected.
+    private List<Vector3Int> pathToHighlightedTile;
+    private LineRenderer pathDrawer;
+    #endregion
 
     void Awake()
     {
         moving = false;
 
-        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
-        selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
-        fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
+        aStar = gameObject.GetComponent<AStar>();
     }
 
     // Start is called before the first frame update
@@ -48,7 +50,12 @@ public class UnitMovement : MonoBehaviour
     {
         unit = gameObject.GetComponent<Unit>();
         owner = unit.owner;
-        id = unit.id;
+
+        map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
+        selector = GameObject.Find("BaseTilemap").GetComponent<TileSelector>();
+        fogOfWar = GameObject.Find("FogOfWar").GetComponent<Tilemap>();
+
+        pathDrawer = GameObject.Find("PathDrawer").GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
@@ -63,6 +70,20 @@ public class UnitMovement : MonoBehaviour
             hasMoved = true;
             GameTiles.instance.tiles[transform.position].Occupied = false;
             GetMovementDirection();
+        }
+
+        if (owner.SelectedUnit != null)
+        {
+            highlightedTileCoord = selector.GetSelectedTile();
+            
+            if (highlightedTileCoord.HasValue)
+            {
+                pathToHighlightedTile = aStar.FindPath(highlightedTileCoord.Value);
+            }
+            else
+            {
+                pathToHighlightedTile = new List<Vector3Int>();
+            }
         }
     }
 
@@ -105,26 +126,24 @@ public class UnitMovement : MonoBehaviour
 
     IEnumerator OnClick()
     {
-        Vector3Int destination = selector.GetSelectedTile();
-        //Debug.Log(destination);
         // Check if unit we want to move is selected and if the tile we want to move to exists and isn't occupied.
-        if (owner.GetSelectedUnit() == unit && GameTiles.instance.tiles.ContainsKey(map.GetCellCenterWorld(destination)) && GameTiles.instance.tiles[map.GetCellCenterWorld(destination)].Occupied == false)
+        if (highlightedTileCoord.HasValue)
         {
-            if (!moving)
+            if (owner.GetSelectedUnit() == unit && GameTiles.instance.tiles[map.GetCellCenterWorld(highlightedTileCoord.Value)].Occupied == false)
             {
-                GameTiles.instance.tiles[transform.position].Occupied = false;
-                moving = true;
-                AStar aStar = gameObject.AddComponent(typeof(AStar)) as AStar;
-                List<Vector3Int> path = aStar.FindPath(destination);
-                Destroy(aStar);
-
-                foreach (Vector3Int coord in path)
+                if (!moving)
                 {
-                    yield return StartCoroutine(MoveToTile(coord));
+                    GameTiles.instance.tiles[transform.position].Occupied = false;
+                    moving = true;
+
+                    foreach (Vector3Int coord in pathToHighlightedTile)
+                    {
+                        yield return StartCoroutine(MoveToTile(coord));
+                    }
+                    unit.Deselect();
+                    moving = false;
+                    GameTiles.instance.tiles[transform.position].Occupied = true;
                 }
-                unit.Deselect();
-                moving = false;
-                GameTiles.instance.tiles[transform.position].Occupied = true;
             }
         }
     }

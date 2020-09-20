@@ -1,3 +1,20 @@
+implementation order:
+- hex terrain generator
+- moving unit between hex tiles
+- camera: moving the camera around
+
+- switch between units
+
+- select unit
+	- context menu pops up
+
+
+- networked game manager
+	- needs to be instantiated on server as a singleton
+	- will contain sync var / sync lists
+
+every unit should have its own script + prefab witch uses the script
+
 Player Object
 
 

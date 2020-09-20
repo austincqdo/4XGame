@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public class Player : MonoBehaviour
 {
     private Tilemap map;
 
-    private Unit selectedUnit;
+    public Unit SelectedUnit { get; set; }
 
     [SerializeField]
     [Tooltip("List of units owned by player.")]
@@ -23,6 +24,8 @@ public class Player : MonoBehaviour
 
     public string Theme { get; set; }
 
+    public RectTransform EndTurnButtonRect { get; set; }
+
     void Awake()
     {
         map = GameObject.Find("BaseTilemap").GetComponent<Tilemap>();
@@ -35,6 +38,9 @@ public class Player : MonoBehaviour
         GameManager.instance.NumPlayers += 1;
 
         this.Theme = GameManager.instance.PlayerThemes[PlayerID];
+
+        // Make sure end turn button blocks raycasts.
+        EndTurnButtonRect = GameObject.Find("Canvas").GetComponentInChildren<RectTransform>();
     }
 
     // Update is called once per frame
@@ -49,19 +55,23 @@ public class Player : MonoBehaviour
 
             if (Keyboard.current.hKey.wasPressedThisFrame)
             {
-                if (selectedUnit)
+                if (SelectedUnit)
                 {
-                    selectedUnit.FoundTerritory();
+                    SelectedUnit.FoundTerritory();
                 }
             }
 
-            if (Mouse.current.rightButton.wasPressedThisFrame)
+            // If not interacting with the UI.
+            if (!RectTransformUtility.RectangleContainsScreenPoint(EndTurnButtonRect, Mouse.current.position.ReadValue()))
             {
-                ProcessClick("Right");
-            }
-            else if (Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                ProcessClick("Left");
+                if (Mouse.current.rightButton.wasPressedThisFrame)
+                {
+                    ProcessClick("Right");
+                }
+                else if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    ProcessClick("Left");
+                }
             }
         }
     }
@@ -79,12 +89,12 @@ public class Player : MonoBehaviour
 
     public Unit GetSelectedUnit()
     {
-        return this.selectedUnit;
+        return this.SelectedUnit;
     }
 
     public void SetSelectedUnit(Unit selectedUnit)
     {
-        this.selectedUnit = selectedUnit;
+        this.SelectedUnit = selectedUnit;
     }
 
     private void SpawnUnit(string unitType = "BasicUnit")
@@ -101,7 +111,7 @@ public class Player : MonoBehaviour
         units.Add(newUnit);
 
         // Select only new unit.
-        if (selectedUnit) { selectedUnit.Deselect(); }
+        if (SelectedUnit) { SelectedUnit.Deselect(); }
         unit.Select();
 
         GameTiles.instance.tiles[newUnit.transform.position].Occupied = true;
@@ -114,26 +124,45 @@ public class Player : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         int layerMask = 1 << 8;
         RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, layerMask);
-        switch (which)
+
+        // If a collider was hit by the raycast...
+        Collider2D hitCollider = hit.collider;
+        if (hitCollider)
         {
-            case "Right":
-                if (selectedUnit) { selectedUnit.Deselect(); }
-                if (hit.collider)
-                {
-                    Unit unit = hit.collider.gameObject.GetComponent<Unit>();
-                    unit.Select();
-                }
-                break;
-            case "Left":
-                if (selectedUnit && hit.collider) //selectedUnit attacking the clicked unit
-                {
-                    Unit targetUnit = hit.collider.gameObject.GetComponent<Unit>();
-                    if (selectedUnit != targetUnit)
+            GameObject hitGameObject = hitCollider.gameObject;
+            switch (which)
+            {
+                case "Right":
+                    // If a unit is clicked
+                    Unit unitHit;
+                    if ((unitHit = hitGameObject.GetComponent<Unit>()) != null)
                     {
-                        selectedUnit.Attack(targetUnit, 20);
+                        if (SelectedUnit) { SelectedUnit.Deselect(); }
+                        if (unitHit.owner == this)
+                        {
+                            unitHit.Select();
+                        }
                     }
-                }
-                break;
+                    break;
+                case "Left":
+                    if (SelectedUnit) //selectedUnit attacking the clicked unit
+                    {
+                        Unit targetUnit;
+                        if ((targetUnit = hitGameObject.GetComponent<Unit>()) != null)
+                        {
+                            // Can't attack your own units
+                            if (targetUnit.owner != this)
+                            {
+                                SelectedUnit.Attack(targetUnit, 20);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            if (SelectedUnit) { SelectedUnit.Deselect(); }
         }
     }
 

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6412850855995804658}
   - component: {fileID: 3908599103779581676}
   - component: {fileID: -1326821626381503853}
+  - component: {fileID: 3032620886238691845}
   m_Layer: 8
   m_Name: BasicUnit
   m_TagString: Unit
@@ -174,3 +175,15 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   nameInUI: {fileID: 0}
   unitCanvas: {fileID: 0}
+--- !u!114 &3032620886238691845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412850855995804661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e9dc5beb8b704e2181da469bae03e58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

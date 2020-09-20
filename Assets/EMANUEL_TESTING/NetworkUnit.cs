@@ -5,7 +5,7 @@ using UnityEngine;
 using Mirror;
 
 
-public class Unit : NetworkBehavior
+public class NetworkUnit : NetworkBehaviour
 {
     // Start is called before the first frame update
     void Start()

@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
 
+    public List<Player> PlayersList { get; set; } = new List<Player>();
     public List<string> PlayerThemes { get; set; } = new List<string>() { "Orange", "Purple" };
 
     void Awake()
@@ -40,6 +41,9 @@ public class GameManager : MonoBehaviour
     {
         cameraFollow.Setup(() => unitTransform.position);        
         spawnPosition = map.GetCellCenterWorld(new Vector3Int(-3, 3, 0));
+
+        // Delete later
+        PlayersList.Add(GameObject.Find("Player").GetComponent<Player>());
     }
 
     void Update()
@@ -49,6 +53,7 @@ public class GameManager : MonoBehaviour
         {
             GameObject newPlayer = Instantiate(playerPrefab);
             newPlayer.GetComponent<Player>().PlayerID = NumPlayers;
+            PlayersList.Add(newPlayer.GetComponent<Player>());
         }
     }
 
@@ -64,6 +69,13 @@ public class GameManager : MonoBehaviour
 
     public void EndTurn()
     {
+        // Hide current player unit canvas.
+        Unit selectedUnit = PlayersList[CurrentPlayer].SelectedUnit;
+        if (selectedUnit)
+        {
+            selectedUnit.Deselect();
+        }
+
         if (CurrentPlayer == NumPlayers - 1)
         {
             TurnCounter += 1;
